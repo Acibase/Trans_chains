@@ -1,0 +1,33 @@
+This program combines SNP genotypic and epidemiological data to work out the most parsimonious route of transmission 
+
+Before you run the script you need:
+1) [patient_genotype.txt] file = SNP genotype of all patients in outbreak
+2) [patient_stay.txt] file = ward stay of all patients
+3) [patient_positive.txt] = day within outbreak when a patient first tests positive
+all in tab-delineated form
+
+-----------------
+Options
+[days_offset] = number of days gap allowed between donor and recipient. Must be an integer  
+
+-----------------
+To run script enter:
+python trans_chain.py [patient_genotype.txt] [patient_stay.txt] [patient_positive.txt] [days_offset] > [output_file.xt]
+
+----------------
+Output
+
+Results are split into four sections:
+1) Predicted transmission events based on ward stay/contact data only
+	[recipient]: {'[donor]':[from day x]} 
+	e.g. 10: {'9': 57} 
+	The donor of patient 10 is patient 9 starting from day 57
+2) Predicted transmission events based on genotype data only
+	[recipient]: [('donor',[#SNPs difference])
+	e.g. 2: [('1', 0), ('13', 0), ('15', 1)]
+	The donors of patient 2 are 1, 13 and 15. Patients 1 and 13 share the same SNP g	genotype; patient 15 has one SNP different compared to patient 2.  
+3) Predicted transmission events based on contact and genotype data
+	recipient_id = [recipient], donor data = [('[donor]', [#SNPs difference], [from 	day x])]
+	e.g. recipient_id = 60, donor data = [('59', 0, 555), ('52', 2, 625)]
+	The donor of patient 60 are 59 and 52. Patient 59 had contact with the recipient 	from day 555, both share the same genotype; patient 52 had contact with the 		recipient from day 625 and has 2 SNPs changes.
+4) List of recipients with no potential donors
